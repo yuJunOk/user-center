@@ -1,0 +1,33 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: user-center-system
+  # session 失效时间
+  session:
+    timeout: 86400
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: qweasd!@#QWE
+    url: jdbc:mysql://localhost:3306/user_center?characterEncoding=UTF8&useUnicode=true&useSSL=false
+  mail:
+    protocol: smtp #邮件协议
+    host: smtp.126.com #网易邮箱smtp服务器地址
+    port: 25 #默认端口
+    username: peng_yujun53@126.com #发件人邮箱地址
+    password:  #授权码
+    default-encoding: UTF-8 #编码字符集
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: isDelete
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+  #configuration:
+  #  log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #mybatis日志打印
+
