@@ -115,7 +115,7 @@ export default () => {
           if (res.data > 0) {
             message.success('修改用户消息成功');
           } else {
-            message.success(res.details ?? res.message ?? '修改用户消息失败，请稍后再试');
+            message.success(res.message ?? '修改用户消息失败，请稍后再试');
           }
         },
         onDelete: async (rowKey, data) => {
@@ -124,7 +124,7 @@ export default () => {
           if (deleteRes.data) {
             message.success('删除成功！');
           } else {
-            message.error(deleteRes.details ?? deleteRes.message ?? '删除失败，请稍后再试');
+            message.error(deleteRes.message ?? '删除失败，请稍后再试');
           }
         },
       }}
@@ -164,7 +164,7 @@ export default () => {
               actionRef.current?.reload();
               return true;
             } else {
-              message.error(res.details ?? res.message ?? '添加失败，请稍后再试');
+              message.error(res.message ?? '添加失败，请稍后再试');
               return false;
             }
           }}

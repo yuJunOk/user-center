@@ -83,7 +83,7 @@ const Register: React.FC = () => {
         ...values,
         type,
       });
-      if (res.code === 0 && res.data > 0){
+      if (res.code === 23200 && res.data > 0){
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
         // 跳转到登录页
@@ -92,7 +92,7 @@ const Register: React.FC = () => {
         history.push('/user/login?redirect=' + (urlParams.get('redirect') || '/'));
         return;
       }else {
-        throw new Error(`register error id = ${res.details ?? res.message}`);
+        throw new Error(`register error id = ${res.message}`);
       }
     } catch (error: any) {
       const defaultLoginFailureMessage = '注册失败，请重试！';

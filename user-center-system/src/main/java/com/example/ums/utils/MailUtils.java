@@ -1,4 +1,4 @@
-package com.example.ums.common;
+package com.example.ums.utils;
 
 import com.example.ums.constant.MailConstant;
 import jakarta.annotation.Resource;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class SendMailUtil {
+public class MailUtils {
     @Resource
     private JavaMailSender javaMailSender;
 

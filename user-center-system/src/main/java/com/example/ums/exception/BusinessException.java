@@ -1,6 +1,6 @@
 package com.example.ums.exception;
 
-import com.example.ums.common.ResultCode;
+import com.example.ums.common.ResponseCode;
 import lombok.Getter;
 
 /**
@@ -11,30 +11,25 @@ import lombok.Getter;
 @Getter
 public class BusinessException extends RuntimeException {
 
-    private final int code;
+    private final long code;
 
     private final String message;
 
-    private final String details;
-
-    public BusinessException(String message, int code, String details) {
+    public BusinessException(long code, String message) {
         super(message);
         this.code = code;
         this.message = message;
-        this.details = details;
     }
 
-    public BusinessException(ResultCode resultCode) {
-        super(resultCode.getMessage());
-        this.code = resultCode.getCode();
-        this.message = resultCode.getMessage();
-        this.details = null;
+    public BusinessException(ResponseCode responseCode) {
+        super(responseCode.getMessage());
+        this.code = responseCode.getCode();
+        this.message = responseCode.getMessage();
     }
 
-    public BusinessException(ResultCode resultCode, String details) {
-        super(resultCode.getMessage());
-        this.code = resultCode.getCode();
-        this.message = resultCode.getMessage();
-        this.details = details;
+    public BusinessException(ResponseCode responseCode, String message) {
+        super(responseCode.getMessage());
+        this.code = responseCode.getCode();
+        this.message = message;
     }
 }

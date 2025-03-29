@@ -87,7 +87,7 @@ const Login: React.FC = () => {
         ...values,
         type,
       });
-      if (res.code === 0 && res.data) {
+      if (res.code === 23200 && res.data) {
         const defaultLoginSuccessMessage = '登录成功！';
         message.success(defaultLoginSuccessMessage);
         await fetchUserInfo();
@@ -95,7 +95,7 @@ const Login: React.FC = () => {
         history.push(urlParams.get('redirect') || '/');
         return;
       }else {
-        throw new Error(res.details ?? res.message);
+        throw new Error(res.message);
       }
     } catch (error: any) {
       const defaultLoginFailureMessage = '登录失败，请重试！';
