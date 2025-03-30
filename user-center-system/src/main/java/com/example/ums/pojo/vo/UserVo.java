@@ -1,6 +1,6 @@
-package com.example.ums.model.vo;
+package com.example.ums.pojo.vo;
 
-import com.example.ums.model.domain.User;
+import com.example.ums.pojo.domain.UserDo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -77,18 +77,18 @@ public class UserVo implements Serializable {
 
     /**
      * 根据User构建UserVo
-     * @param user 表用户类
+     * @param userDo 表用户类
      */
-    public UserVo(User user) {
-        this.id = user.getId();
-        this.userName = user.getUserName();
-        this.loginName = user.getLoginName();
-        this.avatarUrl = user.getAvatarUrl();
-        this.gender = user.getGender();
-        this.phone = user.getPhone();
-        this.email = user.getEmail();
-        this.status = user.getStatus();
-        this.userRole = user.getUserRole();
-        this.createTime = user.getCreateTime();
+    public UserVo(UserDo userDo) {
+        this.id = userDo.getId();
+        this.userName = userDo.getUserName();
+        this.loginName = userDo.getLoginName();
+        this.avatarUrl = userDo.getAvatarUrl();
+        this.gender = userDo.getGender();
+        this.phone = userDo.getPhone();
+        this.email = userDo.getEmail();
+        this.status = userDo.getStatus();
+        this.userRole = userDo.getUserRole();
+        this.createTime = userDo.getCreateTime();
     }
 }

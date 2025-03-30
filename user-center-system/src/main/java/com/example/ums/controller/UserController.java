@@ -4,11 +4,12 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.ums.common.ResponseCode;
 import com.example.ums.common.ResponseEntity;
 import com.example.ums.exception.BusinessException;
-import com.example.ums.model.domain.User;
-import com.example.ums.model.request.PageRequest;
-import com.example.ums.model.request.UserLoginRequest;
-import com.example.ums.model.request.UserRegisterRequest;
-import com.example.ums.model.vo.UserVo;
+import com.example.ums.pojo.domain.UserDo;
+import com.example.ums.pojo.dto.PageDto;
+import com.example.ums.pojo.dto.UserDto;
+import com.example.ums.pojo.dto.UserLoginDto;
+import com.example.ums.pojo.dto.UserRegisterDto;
+import com.example.ums.pojo.vo.UserVo;
 import com.example.ums.service.UserService;
 import com.example.ums.utils.CommonUtils;
 import jakarta.annotation.Resource;
@@ -31,15 +32,15 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest, HttpServletRequest request) {
-        if (userRegisterRequest == null) {
+    public ResponseEntity<Long> userRegister(@RequestBody UserRegisterDto userRegisterDto, HttpServletRequest request) {
+        if (userRegisterDto == null) {
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "参数为空");
         }
-        String loginName = userRegisterRequest.getLoginName();
-        String loginPwd = userRegisterRequest.getLoginPwd();
-        String checkPwd = userRegisterRequest.getCheckPwd();
-        String email = userRegisterRequest.getEmail();
-        String captcha = userRegisterRequest.getCaptcha();
+        String loginName = userRegisterDto.getLoginName();
+        String loginPwd = userRegisterDto.getLoginPwd();
+        String checkPwd = userRegisterDto.getCheckPwd();
+        String email = userRegisterDto.getEmail();
+        String captcha = userRegisterDto.getCaptcha();
         if (CommonUtils.isAnyBlank(loginName, loginPwd, checkPwd, email, captcha)) {
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "参数为空");
         }
@@ -48,12 +49,12 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserVo> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
-        if (userLoginRequest == null) {
+    public ResponseEntity<UserVo> userLogin(@RequestBody UserLoginDto userLoginDto, HttpServletRequest request) {
+        if (userLoginDto == null) {
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "参数为空");
         }
-        String loginName = userLoginRequest.getLoginName();
-        String loginPwd = userLoginRequest.getLoginPwd();
+        String loginName = userLoginDto.getLoginName();
+        String loginPwd = userLoginDto.getLoginPwd();
         if (CommonUtils.isAnyBlank(loginName, loginPwd)) {
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "参数为空");
         }
@@ -78,8 +79,8 @@ public class UserController {
         // todo: 校验用户是否合法
         try{
             Long userId = currentUser.getId();
-            User user = userService.getById(userId);
-            UserVo userVo = new UserVo(user);
+            UserDo userDo = userService.getById(userId);
+            UserVo userVo = new UserVo(userDo);
             return ResponseEntity.success(userVo);
         }catch (Exception e){
             return ResponseEntity.failed(ResponseCode.UNAUTHORIZED);
@@ -87,11 +88,11 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<IPage<UserVo>> searchUser(UserVo userVo, PageRequest pageRequest, HttpServletRequest request) {
+    public ResponseEntity<IPage<UserVo>> searchUser(UserDto userDto, PageDto pageDto, HttpServletRequest request) {
         if (!isAdmin(request)) {
             throw new BusinessException(ResponseCode.UNAUTHORIZED, "无权限访问");
         }
-        IPage<UserVo> userPage = userService.searchUser(userVo, pageRequest);
+        IPage<UserVo> userPage = userService.searchUser(userDto, pageDto);
         return ResponseEntity.success(userPage);
     }
 
@@ -112,14 +113,14 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Boolean> updateUser(@RequestBody User user, HttpServletRequest request) {
+    public ResponseEntity<Boolean> updateUser(@RequestBody UserDo userDo, HttpServletRequest request) {
         if (!isAdmin(request)) {
             throw new BusinessException(ResponseCode.UNAUTHORIZED, "无权限访问");
         }
-        if (user.getId() == null || user.getId() <= 0) {
+        if (userDo.getId() == null || userDo.getId() <= 0) {
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "更新请求id值无效");
         }
-        boolean result = userService.updateById(user);
+        boolean result = userService.updateById(userDo);
         if (result) {
             return ResponseEntity.success(true);
         }else {
@@ -128,11 +129,11 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Boolean> addUser(@RequestBody User user, HttpServletRequest request) {
+    public ResponseEntity<Boolean> addUser(@RequestBody UserDo userDo, HttpServletRequest request) {
         if (!isAdmin(request)) {
             throw new BusinessException(ResponseCode.UNAUTHORIZED, "无权限访问");
         }
-        boolean result = userService.addUser(user);
+        boolean result = userService.addUser(userDo);
         if (result) {
             return ResponseEntity.success(true);
         }else {

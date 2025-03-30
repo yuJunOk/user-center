@@ -3,9 +3,9 @@ package com.example.ums.mapper;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
-import com.example.ums.model.domain.User;
+import com.example.ums.pojo.domain.UserDo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.ums.model.vo.UserVo;
+import com.example.ums.pojo.vo.UserVo;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.Param;
 * @createDate 2025-03-21 10:46:02
 * @Entity com.example.usermanagesystem.model.domain.User
 */
-public interface UserMapper extends BaseMapper<User> {
+public interface UserMapper extends BaseMapper<UserDo> {
 
     /**
      * 分页查询
@@ -22,7 +22,7 @@ public interface UserMapper extends BaseMapper<User> {
      * @param queryWrapper
      * @return
      */
-    IPage<UserVo> selectUserVoPage(IPage<UserVo> page, @Param(Constants.WRAPPER) Wrapper<User> queryWrapper);
+    IPage<UserVo> selectUserVoPage(IPage<UserVo> page, @Param(Constants.WRAPPER) Wrapper<UserDo> queryWrapper);
 
 }
 

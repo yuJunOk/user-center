@@ -1,10 +1,11 @@
 package com.example.ums.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.ums.model.domain.User;
+import com.example.ums.pojo.domain.UserDo;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.ums.model.request.PageRequest;
-import com.example.ums.model.vo.UserVo;
+import com.example.ums.pojo.dto.PageDto;
+import com.example.ums.pojo.dto.UserDto;
+import com.example.ums.pojo.vo.UserVo;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -12,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 * @description 针对表【tb_user(用户表)】的数据库操作Service
 * @createDate 2025-03-21 10:46:02
 */
-public interface UserService extends IService<User> {
+public interface UserService extends IService<UserDo> {
 
     /**
      * 用户注册
@@ -42,11 +43,11 @@ public interface UserService extends IService<User> {
 
     /**
      * 分页查询
-     * @param userVo
-     * @param pageRequest
+     * @param userDto
+     * @param pageDto
      * @return
      */
-    IPage<UserVo> searchUser(UserVo userVo, PageRequest pageRequest);
+    IPage<UserVo> searchUser(UserDto userDto, PageDto pageDto);
 
     /**
      *
@@ -57,8 +58,8 @@ public interface UserService extends IService<User> {
 
     /**
      * 添加用户
-     * @param user
+     * @param userDo
      * @return
      */
-    boolean addUser(User user);
+    boolean addUser(UserDo userDo);
 }

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.ums.mapper.UserMapper">
 
-    <resultMap id="BaseResultMap" type="com.example.ums.model.domain.User">
+    <resultMap id="BaseResultMap" type="com.example.ums.pojo.domain.UserDo">
             <id property="id" column="id" />
             <result property="userName" column="user_name" />
             <result property="loginName" column="login_name" />
@@ -20,7 +20,7 @@
             <result property="isDelete" column="is_delete" />
     </resultMap>
 
-    <resultMap id="UserVoResultMap" type="com.example.ums.model.domain.User">
+    <resultMap id="UserVoResultMap" type="com.example.ums.pojo.domain.UserDo">
         <id property="id" column="id" />
         <result property="userName" column="user_name" />
         <result property="loginName" column="login_name" />
@@ -45,7 +45,7 @@
     </sql>
 
 
-    <select id="selectUserVoPage" resultType="com.example.ums.model.vo.UserVo">
+    <select id="selectUserVoPage" resultType="com.example.ums.pojo.vo.UserVo">
         select <include refid="UserVo_Column_List" /> from tb_user
         ${ew.customSqlSegment}
     </select>

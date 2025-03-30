@@ -7,9 +7,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.ums.common.ResponseCode;
 import com.example.ums.exception.BusinessException;
 import com.example.ums.mapper.UserMapper;
-import com.example.ums.model.domain.User;
-import com.example.ums.model.request.PageRequest;
-import com.example.ums.model.vo.UserVo;
+import com.example.ums.pojo.domain.UserDo;
+import com.example.ums.pojo.dto.PageDto;
+import com.example.ums.pojo.dto.UserDto;
+import com.example.ums.pojo.vo.UserVo;
 import com.example.ums.service.UserService;
 import com.example.ums.utils.CommonUtils;
 import com.example.ums.utils.MailUtils;
@@ -23,7 +24,7 @@ import org.springframework.util.StringUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.example.mps.constant.UserConstant.*;
+import static com.example.ums.constant.UserConstant.*;
 
 /**
 * @author pengYuJun
@@ -32,7 +33,7 @@ import static com.example.mps.constant.UserConstant.*;
 */
 @Slf4j
 @Service
-public class UserServiceImpl extends ServiceImpl<UserMapper, User>
+public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo>
         implements UserService{
 
     @Resource
@@ -72,15 +73,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         request.getSession().removeAttribute("captcha");
         // 账户不能重复
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getLoginName, loginName);
+        LambdaQueryWrapper<UserDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserDo::getLoginName, loginName);
         long count = this.count(queryWrapper);
         if (count > 0){
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户不能重复");
         }
         // 邮箱不能重复
         queryWrapper.clear();
-        queryWrapper.eq(User::getEmail, email);
+        queryWrapper.eq(UserDo::getEmail, email);
         count = this.count(queryWrapper);
         if (count > 0){
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "邮箱不能重复");
@@ -88,15 +89,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 2. 加密
         String md5Pwd = DigestUtils.md5DigestAsHex((PASSWORD_SALT + loginPwd).getBytes());
         // 3. 插入数据
-        User user = new User();
-        user.setLoginName(loginName);
-        user.setLoginPwd(md5Pwd);
-        user.setEmail(email);
-        boolean saveResult = this.save(user);
+        UserDo userDo = new UserDo();
+        userDo.setLoginName(loginName);
+        userDo.setLoginPwd(md5Pwd);
+        userDo.setEmail(email);
+        boolean saveResult = this.save(userDo);
         if (!saveResult){
             throw new BusinessException(ResponseCode.ERROR, "注册失败");
         }
-        return user.getId();
+        return userDo.getId();
     }
 
     @Override
@@ -119,15 +120,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 2. 加密
         String md5Pwd = DigestUtils.md5DigestAsHex((PASSWORD_SALT + loginPwd).getBytes());
         // 查询用户信息
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getLoginName, loginName);
-        queryWrapper.eq(User::getLoginPwd, md5Pwd);
-        User user = this.getOne(queryWrapper);
-        if (user == null){
+        LambdaQueryWrapper<UserDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserDo::getLoginName, loginName);
+        queryWrapper.eq(UserDo::getLoginPwd, md5Pwd);
+        UserDo userDo = this.getOne(queryWrapper);
+        if (userDo == null){
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "登录失败，账户或密码错误");
         }
         // 3.用户脱敏
-        UserVo userVo = new UserVo(user);
+        UserVo userVo = new UserVo(userDo);
         // LOGIN_NAME_MIN_LEN. 记录用户的登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, userVo);
         return userVo;
@@ -140,24 +141,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public IPage<UserVo> searchUser(UserVo userVo, PageRequest pageRequest) {
-        IPage<UserVo> userPage = new Page<>(pageRequest.getCurrent(), pageRequest.getPageSize());
+    public IPage<UserVo> searchUser(UserDto userDto, PageDto pageDto) {
+        IPage<UserVo> userPage = new Page<>(pageDto.getCurrent(), pageDto.getPageSize());
         // 筛选
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(StringUtils.hasText(userVo.getUserName()), User::getUserName, userVo.getUserName());
-        queryWrapper.like(StringUtils.hasText(userVo.getLoginName()), User::getLoginName, userVo.getLoginName());
-        queryWrapper.eq(userVo.getGender() != null, User::getGender, userVo.getGender());
-        queryWrapper.like(StringUtils.hasText(userVo.getPhone()), User::getPhone, userVo.getPhone());
-        queryWrapper.like(StringUtils.hasText(userVo.getEmail()), User::getEmail, userVo.getEmail());
-        queryWrapper.eq(userVo.getStatus() != null, User::getStatus, userVo.getStatus());
-        queryWrapper.eq(userVo.getUserRole() != null, User::getUserRole, userVo.getUserRole());
+        LambdaQueryWrapper<UserDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(StringUtils.hasText(userDto.getUserName()), UserDo::getUserName, userDto.getUserName());
+        queryWrapper.like(StringUtils.hasText(userDto.getLoginName()), UserDo::getLoginName, userDto.getLoginName());
+        queryWrapper.eq(userDto.getGender() != null, UserDo::getGender, userDto.getGender());
+        queryWrapper.like(StringUtils.hasText(userDto.getPhone()), UserDo::getPhone, userDto.getPhone());
+        queryWrapper.like(StringUtils.hasText(userDto.getEmail()), UserDo::getEmail, userDto.getEmail());
+        queryWrapper.eq(userDto.getStatus() != null, UserDo::getStatus, userDto.getStatus());
+        queryWrapper.eq(userDto.getUserRole() != null, UserDo::getUserRole, userDto.getUserRole());
         // 逻辑删除不要查出来
-        queryWrapper.eq(User::getIsDelete, 0);
+        queryWrapper.eq(UserDo::getIsDelete, 0);
         //
         userMapper.selectUserVoPage(userPage, queryWrapper);
         //若当前页码大于总页面数
-        if (pageRequest.getCurrent() > userPage.getPages()){
-            userPage = new Page<>(userPage.getPages(), pageRequest.getPageSize());
+        if (pageDto.getCurrent() > userPage.getPages()){
+            userPage = new Page<>(userPage.getPages(), pageDto.getPageSize());
             userMapper.selectUserVoPage(userPage, queryWrapper);
         }
         return userPage;
@@ -179,34 +180,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     }
 
     @Override
-    public boolean addUser(User user) {
+    public boolean addUser(UserDo userDo) {
         // 1. 校验
-        if (CommonUtils.isAnyBlank(user.getLoginName(), user.getLoginPwd())) {
+        if (CommonUtils.isAnyBlank(userDo.getLoginName(), userDo.getLoginPwd())) {
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户和密码不能为空");
         }
-        if (user.getLoginName().length() < LOGIN_NAME_MIN_LEN){
+        if (userDo.getLoginName().length() < LOGIN_NAME_MIN_LEN){
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "用户账号过短");
         }
-        if (user.getLoginPwd().length() < LOGIN_PWD_MIN_LEN){
+        if (userDo.getLoginPwd().length() < LOGIN_PWD_MIN_LEN){
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "用户密码过短");
         }
         // 账户不能包含特殊字符
-        Matcher matcher = Pattern.compile(VALID_LOGIN_NAME_PATTERN).matcher(user.getLoginName());
+        Matcher matcher = Pattern.compile(VALID_LOGIN_NAME_PATTERN).matcher(userDo.getLoginName());
         if (matcher.find()){
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户不能包含特殊字符");
         }
         // 账户不能重复
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(User::getLoginName, user.getLoginName());
+        LambdaQueryWrapper<UserDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserDo::getLoginName, userDo.getLoginName());
         long count = this.count(queryWrapper);
         if (count > 0){
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "账户不能重复");
         }
         // 2. 加密
-        String md5Pwd = DigestUtils.md5DigestAsHex((PASSWORD_SALT + user.getLoginPwd()).getBytes());
-        user.setLoginPwd(md5Pwd);
+        String md5Pwd = DigestUtils.md5DigestAsHex((PASSWORD_SALT + userDo.getLoginPwd()).getBytes());
+        userDo.setLoginPwd(md5Pwd);
         // 3.插入
-        return this.save(user);
+        return this.save(userDo);
     }
 }
 

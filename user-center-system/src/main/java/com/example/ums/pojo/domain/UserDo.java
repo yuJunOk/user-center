@@ -1,4 +1,4 @@
-package com.example.ums.model.domain;
+package com.example.ums.pojo.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -15,7 +15,7 @@ import lombok.Data;
  */
 @TableName(value ="tb_user")
 @Data
-public class User {
+public class UserDo {
     /**
      * id
      */

@@ -1,4 +1,4 @@
-package com.example.ums.model.request;
+package com.example.ums.pojo.dto;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author pengYuJun
  */
 @Data
-public class UserLoginRequest implements Serializable {
+public class UserLoginDto implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 2339040579134251257L;
