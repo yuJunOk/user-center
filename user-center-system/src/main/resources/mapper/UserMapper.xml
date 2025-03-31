@@ -17,7 +17,7 @@
             <result property="userRole" column="user_role" />
             <result property="createTime" column="create_time" />
             <result property="updateTime" column="update_time" />
-            <result property="isDelete" column="is_delete" />
+            <result property="deleted" column="deleted" />
     </resultMap>
 
     <resultMap id="UserVoResultMap" type="com.example.ums.pojo.domain.UserDo">
@@ -36,7 +36,7 @@
     <sql id="Base_Column_List">
         id,user_name,login_name,avatar_url,gender,login_pwd,
         phone,email,status,user_role,create_time,update_time,
-        is_delete
+        deleted
     </sql>
 
     <sql id="UserVo_Column_List">

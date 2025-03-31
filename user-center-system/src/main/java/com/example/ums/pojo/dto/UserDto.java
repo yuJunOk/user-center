@@ -73,7 +73,7 @@ public class UserDto implements Serializable {
     /**
      * 是否删除
      */
-    private Integer isDelete;
+    private Integer deleted;
 
     /**
      * 根据User构建UserVo

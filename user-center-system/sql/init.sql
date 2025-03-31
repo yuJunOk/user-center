@@ -14,6 +14,6 @@ create table tb_user
     status      int      default 0                 not null comment '用户状态',
     create_time datetime default CURRENT_TIMESTAMP null comment '创建时间',
     update_time datetime default CURRENT_TIMESTAMP null comment '更新时间',
-    is_delete   tinyint  default 0                 not null comment '是否删除'
+    deleted   tinyint  default 0                 not null comment '是否删除'
 )
     comment '用户表';

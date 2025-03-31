@@ -153,7 +153,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo>
         queryWrapper.eq(userDto.getStatus() != null, UserDo::getStatus, userDto.getStatus());
         queryWrapper.eq(userDto.getUserRole() != null, UserDo::getUserRole, userDto.getUserRole());
         // 逻辑删除不要查出来
-        queryWrapper.eq(UserDo::getIsDelete, 0);
+        queryWrapper.eq(UserDo::getDeleted, 0);
         //
         userMapper.selectUserVoPage(userPage, queryWrapper);
         //若当前页码大于总页面数

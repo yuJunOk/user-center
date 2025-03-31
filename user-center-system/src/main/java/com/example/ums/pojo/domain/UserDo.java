@@ -81,5 +81,5 @@ public class UserDo {
      * 是否删除
      */
     @TableLogic
-    private Integer isDelete;
+    private Integer deleted;
 }
