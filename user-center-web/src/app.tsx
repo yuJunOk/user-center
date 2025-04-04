@@ -28,7 +28,7 @@ export async function getInitialState(): Promise<{
       let res = await queryCurrentUser({
         skipErrorHandler: true,
       });
-      if (res.code === 0 && res.data) {
+      if (res.code === 23200 && res.data) {
         return res.data;
       }else {
         throw new Error(res.details ?? res.message);
