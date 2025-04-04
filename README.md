@@ -5,11 +5,11 @@
 
 如图：
 
-![登录页](doc\images\登录页.png)
+![登录页](doc/images/登录页.png)
 
-![注册页](doc\images\注册页.png)
+![注册页](doc/images/注册页.png)
 
-![用户管理页](doc\images\用户管理页.png)
+![用户管理页](doc/images/用户管理页.png)
 
 ## 技术选型
 
