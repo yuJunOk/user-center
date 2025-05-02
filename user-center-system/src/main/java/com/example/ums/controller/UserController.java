@@ -5,16 +5,16 @@ import com.example.ums.common.ResponseCode;
 import com.example.ums.common.ResponseEntity;
 import com.example.ums.exception.BusinessException;
 import com.example.ums.pojo.domain.UserDo;
-import com.example.ums.pojo.dto.PageDto;
-import com.example.ums.pojo.dto.UserDto;
-import com.example.ums.pojo.dto.UserLoginDto;
-import com.example.ums.pojo.dto.UserRegisterDto;
+import com.example.ums.pojo.dto.user.UserLoginDto;
+import com.example.ums.pojo.dto.user.UserQueryPageDto;
+import com.example.ums.pojo.dto.user.UserRegisterDto;
 import com.example.ums.pojo.vo.UserVo;
 import com.example.ums.service.UserService;
 import com.example.ums.utils.CommonUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,19 +80,20 @@ public class UserController {
         try{
             Long userId = currentUser.getId();
             UserDo userDo = userService.getById(userId);
-            UserVo userVo = new UserVo(userDo);
+            UserVo userVo = new UserVo();
+            BeanUtils.copyProperties(userDo, userVo);
             return ResponseEntity.success(userVo);
         }catch (Exception e){
             return ResponseEntity.failed(ResponseCode.UNAUTHORIZED);
         }
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<IPage<UserVo>> searchUser(UserDto userDto, PageDto pageDto, HttpServletRequest request) {
+    @PostMapping("/page")
+    public ResponseEntity<IPage<UserVo>> getUserPage(@RequestBody UserQueryPageDto userQueryPageDto, HttpServletRequest request) {
         if (!isAdmin(request)) {
             throw new BusinessException(ResponseCode.UNAUTHORIZED, "无权限访问");
         }
-        IPage<UserVo> userPage = userService.searchUser(userDto, pageDto);
+        IPage<UserVo> userPage = userService.searchUser(userQueryPageDto);
         return ResponseEntity.success(userPage);
     }
 

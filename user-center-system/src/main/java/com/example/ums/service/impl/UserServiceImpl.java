@@ -8,8 +8,7 @@ import com.example.ums.common.ResponseCode;
 import com.example.ums.exception.BusinessException;
 import com.example.ums.mapper.UserMapper;
 import com.example.ums.pojo.domain.UserDo;
-import com.example.ums.pojo.dto.PageDto;
-import com.example.ums.pojo.dto.UserDto;
+import com.example.ums.pojo.dto.user.UserQueryPageDto;
 import com.example.ums.pojo.vo.UserVo;
 import com.example.ums.service.UserService;
 import com.example.ums.utils.CommonUtils;
@@ -17,6 +16,7 @@ import com.example.ums.utils.MailUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -34,7 +34,7 @@ import static com.example.ums.constant.UserConstant.*;
 @Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo>
-        implements UserService{
+        implements UserService {
 
     @Resource
     private UserMapper userMapper;
@@ -128,7 +128,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo>
             throw new BusinessException(ResponseCode.PARAMS_ERROR, "登录失败，账户或密码错误");
         }
         // 3.用户脱敏
-        UserVo userVo = new UserVo(userDo);
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(userDo, userVo);
         // LOGIN_NAME_MIN_LEN. 记录用户的登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, userVo);
         return userVo;
@@ -141,24 +142,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserDo>
     }
 
     @Override
-    public IPage<UserVo> searchUser(UserDto userDto, PageDto pageDto) {
-        IPage<UserVo> userPage = new Page<>(pageDto.getCurrent(), pageDto.getPageSize());
+    public IPage<UserVo> searchUser(UserQueryPageDto userQueryPageDto) {
+        IPage<UserVo> userPage = new Page<>(userQueryPageDto.getCurrent(), userQueryPageDto.getPageSize());
         // 筛选
         LambdaQueryWrapper<UserDo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(StringUtils.hasText(userDto.getUserName()), UserDo::getUserName, userDto.getUserName());
-        queryWrapper.like(StringUtils.hasText(userDto.getLoginName()), UserDo::getLoginName, userDto.getLoginName());
-        queryWrapper.eq(userDto.getGender() != null, UserDo::getGender, userDto.getGender());
-        queryWrapper.like(StringUtils.hasText(userDto.getPhone()), UserDo::getPhone, userDto.getPhone());
-        queryWrapper.like(StringUtils.hasText(userDto.getEmail()), UserDo::getEmail, userDto.getEmail());
-        queryWrapper.eq(userDto.getStatus() != null, UserDo::getStatus, userDto.getStatus());
-        queryWrapper.eq(userDto.getUserRole() != null, UserDo::getUserRole, userDto.getUserRole());
+        queryWrapper.like(StringUtils.hasText(userQueryPageDto.getUserName()), UserDo::getUserName, userQueryPageDto.getUserName());
+        queryWrapper.like(StringUtils.hasText(userQueryPageDto.getLoginName()), UserDo::getLoginName, userQueryPageDto.getLoginName());
+        queryWrapper.eq(userQueryPageDto.getGender() != null, UserDo::getGender, userQueryPageDto.getGender());
+        queryWrapper.like(StringUtils.hasText(userQueryPageDto.getPhone()), UserDo::getPhone, userQueryPageDto.getPhone());
+        queryWrapper.like(StringUtils.hasText(userQueryPageDto.getEmail()), UserDo::getEmail, userQueryPageDto.getEmail());
+        queryWrapper.eq(userQueryPageDto.getStatus() != null, UserDo::getStatus, userQueryPageDto.getStatus());
+        queryWrapper.eq(userQueryPageDto.getUserRole() != null, UserDo::getUserRole, userQueryPageDto.getUserRole());
         // 逻辑删除不要查出来
         queryWrapper.eq(UserDo::getDeleted, 0);
         //
         userMapper.selectUserVoPage(userPage, queryWrapper);
         //若当前页码大于总页面数
-        if (pageDto.getCurrent() > userPage.getPages()){
-            userPage = new Page<>(userPage.getPages(), pageDto.getPageSize());
+        if (userQueryPageDto.getCurrent() > userPage.getPages()){
+            userPage = new Page<>(userPage.getPages(), userQueryPageDto.getPageSize());
             userMapper.selectUserVoPage(userPage, queryWrapper);
         }
         return userPage;

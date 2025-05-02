@@ -1,4 +1,4 @@
-package com.example.ums.pojo.dto;
+package com.example.ums.pojo.dto.user;
 
 import lombok.Data;
 

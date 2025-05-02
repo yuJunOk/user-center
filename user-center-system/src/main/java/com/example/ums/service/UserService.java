@@ -1,10 +1,9 @@
 package com.example.ums.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.example.ums.pojo.domain.UserDo;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.ums.pojo.dto.PageDto;
-import com.example.ums.pojo.dto.UserDto;
+import com.example.ums.pojo.domain.UserDo;
+import com.example.ums.pojo.dto.user.UserQueryPageDto;
 import com.example.ums.pojo.vo.UserVo;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -43,11 +42,10 @@ public interface UserService extends IService<UserDo> {
 
     /**
      * 分页查询
-     * @param userDto
-     * @param pageDto
+     * @param userQueryDto
      * @return
      */
-    IPage<UserVo> searchUser(UserDto userDto, PageDto pageDto);
+    IPage<UserVo> searchUser(UserQueryPageDto userQueryDto);
 
     /**
      *

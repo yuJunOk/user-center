@@ -1,6 +1,5 @@
-package com.example.ums.pojo.vo;
+package com.example.ums.pojo.dto.user;
 
-import com.example.ums.pojo.domain.UserDo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +14,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserVo implements Serializable {
+public class UserQueryDto implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -8460210827254062525L;

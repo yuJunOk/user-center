@@ -1,8 +1,9 @@
-package com.example.ums.pojo.dto;
+package com.example.ums.pojo.dto.user;
 
-import com.example.ums.pojo.domain.UserDo;
+import com.example.ums.pojo.dto.PageDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serial;
@@ -12,13 +13,14 @@ import java.util.Date;
 /**
  * @author pengYuJun
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto implements Serializable {
+public class UserQueryPageDto extends PageDto implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -8460210827254062525L;
+    private static final long serialVersionUID = -8460210827254062521L;
 
     /**
      * id
@@ -74,21 +76,4 @@ public class UserDto implements Serializable {
      * 是否删除
      */
     private Integer deleted;
-
-    /**
-     * 根据User构建UserVo
-     * @param userDo 表用户类
-     */
-    public UserDto(UserDo userDo) {
-        this.id = userDo.getId();
-        this.userName = userDo.getUserName();
-        this.loginName = userDo.getLoginName();
-        this.avatarUrl = userDo.getAvatarUrl();
-        this.gender = userDo.getGender();
-        this.phone = userDo.getPhone();
-        this.email = userDo.getEmail();
-        this.status = userDo.getStatus();
-        this.userRole = userDo.getUserRole();
-        this.createTime = userDo.getCreateTime();
-    }
 }
